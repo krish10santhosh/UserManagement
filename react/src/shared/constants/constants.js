@@ -1,10 +1,10 @@
 export const columns = [
-    { id: 'firstName', label: 'First Name', minWidth: 170 },
-    { id: 'lastName', label: 'Last Name', minWidth: 100 },
+    { id: 'firstName', label: 'First Name', minWidth: 150 },
+    { id: 'lastName', label: 'Last Name', minWidth: 150 },
     {
         id: 'phoneNumber',
         label: 'Phone Number',
-        minWidth: 170,
+        minWidth: 100,
     },
     {
         id: 'email',
@@ -14,6 +14,11 @@ export const columns = [
     {
         id: 'role',
         label: 'Role',
+        minWidth: 70,
+    },
+    {
+        id: 'createdDate',
+        label: 'Created At',
         minWidth: 170,
     },
 ];

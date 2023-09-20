@@ -12,6 +12,7 @@ import { Button, Grid, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsersData } from "../slices/homeSlice";
+import moment from 'moment';
 
 const HomeComponent = () => {
     const navigate = useNavigate();
@@ -74,8 +75,8 @@ const HomeComponent = () => {
                                                     const value = row[column.id];
                                                     return (
                                                         <TableCell key={column.id} align={column.align}>
-                                                            {column.format && typeof value === 'number'
-                                                                ? column.format(value)
+                                                            {moment(value).format("DD/MM/YYYY hh:mm A") !== 'Invalid date'
+                                                                ? moment(value).format("DD/MM/YYYY hh:mmA")
                                                                 : value}
                                                         </TableCell>
                                                     );
