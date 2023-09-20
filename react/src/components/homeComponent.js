@@ -76,7 +76,7 @@ const HomeComponent = () => {
                                                     return (
                                                         <TableCell key={column.id} align={column.align}>
                                                             {typeof (value) == "string" && moment(value).format("DD/MM/YYYY hh:mm A") !== 'Invalid date'
-                                                                ? moment(value).format("DD/MM/YYYY hh:mmA")
+                                                                ? moment(value).format("DD/MM/YYYY hh:mm A")
                                                                 : value}
                                                         </TableCell>
                                                     );
