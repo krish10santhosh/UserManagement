@@ -36,3 +36,27 @@
     transform: rotate(360deg);
   }
 }
+
+th.MuiTableCell-root {
+  min-width: 170px;
+  background-color: lightgray;
+  color: black;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+}
+
+.MuiDialog-paper {
+  width: 600px;
+}
+
+.centered {
+  width: 100px !important;
+  height: 100px !important;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block !important;
+  color: #1976d2 !important;
+  animation: animation-61bdi0 1.4s linear infinite !important;
+}
