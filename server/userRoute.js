@@ -1,10 +1,8 @@
-import * as mongoose from "mongoose";
 import express from "express";
 import userSchema from './models/userModel.js';
 
 let router = express.Router();
 
-// READ User
 router.get("/user/getUserList", async (req, res) => {
   const limit = req.query.limit || 2;
   const page = req.query.page;
@@ -24,7 +22,6 @@ router.get("/user/getUserList", async (req, res) => {
   });
 });
 
-// CREATE User
 router.post("/user/createUser", async (req, res) => {
   const newUser = new userSchema({
     firstName: req.body.firstName,
@@ -43,7 +40,6 @@ router.post("/user/createUser", async (req, res) => {
   });
 });
 
-// UPDATE User
 router.post("/user/updateUser/:id", async (req, res) => {
   await userSchema.updateOne(
     { "_id": req.params.id }, {
@@ -61,7 +57,6 @@ router.post("/user/updateUser/:id", async (req, res) => {
   });
 })
 
-// Delete User
 router.delete("/user/deleteUser/:id",
   async (req, res) => {
     await userSchema.findOneAndRemove(

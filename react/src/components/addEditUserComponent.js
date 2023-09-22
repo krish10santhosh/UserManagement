@@ -19,7 +19,7 @@ const AddEditUserComponent = () => {
     const addUser = useSelector((state) => state.homeReducer.userManagementData.addUser);
     const getUserData = useSelector((state) => state.homeReducer.userManagementData.getUserData);
     const updateUserData = useSelector((state) => state.homeReducer.userManagementData.updateUser);
-    
+
     const [values, setValues] = useState({
         firstName: '',
         lastName: '',
@@ -36,15 +36,15 @@ const AddEditUserComponent = () => {
     });
 
     useEffect(() => {
-        if(getUserData?.data !== null) {
-        setValues((values) => ({
-            ...values,
-            firstName: getUserData?.data?.firstName,
-            lastName: getUserData?.data?.lastName,
-            phoneNumber: getUserData?.data?.phoneNumber,
-            email: getUserData?.data?.email,
-            role: getUserData?.data?.role,
-        }))
+        if (getUserData?.data !== null) {
+            setValues((values) => ({
+                ...values,
+                firstName: getUserData?.data?.firstName,
+                lastName: getUserData?.data?.lastName,
+                phoneNumber: getUserData?.data?.phoneNumber,
+                email: getUserData?.data?.email,
+                role: getUserData?.data?.role,
+            }))
         }
     }, [getUserData]);
 
@@ -222,7 +222,7 @@ const AddEditUserComponent = () => {
         <>
             {
                 addUser?.isloading == true ||
-                updateUserData?.isloading == true ?
+                    updateUserData?.isloading == true ?
                     (<CircularProgress className="centered" />) : null
             }
             <Grid container sx={{
