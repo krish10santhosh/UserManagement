@@ -8,9 +8,19 @@ const addUser = (data) => {
   return axios_instance.post(`user/createUser`, data);
 };
 
+const updateUser = (data) => {
+  return axios_instance.post(`user/updateUser/${data.id}`, data?.value);
+};
+
+const deleteUser = (data) => {
+  return axios_instance.delete(`user/deleteUser/${data}`);
+};
+
 const HomeService = {
   getUsers,
   addUser,
+  updateUser,
+  deleteUser
 };
 
 export default HomeService;

@@ -28,3 +28,7 @@ export const roleList = [
     { label: 'Super Admin', value: 'superAdmin' },
     { label: 'User', value: 'user' }
 ]
+
+
+export const AddUser = "Add User";
+export const Actions = "Actions";

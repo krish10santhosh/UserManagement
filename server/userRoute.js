@@ -6,7 +6,6 @@ let router = express.Router();
 
 // CREATE User
 router.post("/user/createUser", async (req, res) => {
-  const data = req.body;
   const newUser = new userSchema({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -44,52 +43,37 @@ router.get("/user/getUserList", async (req, res) => {
 });
 
 // UPDATE User
-router
-  .route("user/updateUser/:id")
-  // Get Single Student
-  .get((req, res) => {
-    userSchema.findById(
-      req.params.id, (error, data) => {
-        if (error) {
-          return next(error);
-        } else {
-          res.json(data);
-        }
+router.post("/user/updateUser/:id", async (req, res) => {
+  await userSchema.updateOne(
+    { "_id": req.params.id }, {
+    $set: req.body,
+  }).then((user, error) => {
+    if (error) {
+      return res.status(404).json("No User Found!");
+    } else {
+      return res.status(200).json({
+        message: "Users Updated Successfully",
+        data: user,
       });
-  })
-
-  // Update User
-  .put((req, res, next) => {
-    userSchema.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body,
-      },
-      (error, data) => {
-        if (error) {
-          return next(error);
-          console.log(error);
-        } else {
-          res.json(data);
-          console.log("Student updated successfully !");
-        }
-      }
-    );
+    }
   });
+})
 
 // Delete User
-router.delete("user/deleteUser/:id",
-  (req, res, next) => {
-    userSchema.findByIdAndRemove(
-      req.params.id, (error, data) => {
+router.delete("/user/deleteUser/:id",
+  async (req, res) => {
+    await userSchema.findOneAndRemove(
+      {
+        "_id": req.params.id
+      }).then((data, error) => {
         if (error) {
-          return next(error);
+          return res.status(404).json("No User Found!");
         } else {
           res.status(200).json({
-            msg: data,
+            message: "Users Removed Successfully",
           });
         }
       });
-  });
+  })
 
 export default router;

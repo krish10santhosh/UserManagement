@@ -5,14 +5,16 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { columns, users } from "../shared/constants/constants";
-import { Button, Grid, Pagination } from "@mui/material";
+import { Actions, AddUser, columns } from "../shared/constants/constants";
+import { Button, CircularProgress, Grid, Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersData } from "../slices/homeSlice";
+import { getUsersData, getUserAddEditData, deleteUsersData } from "../slices/homeSlice";
 import moment from 'moment';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AlertDialogComponent from '../shared/components/alertdialog';
 
 const HomeComponent = () => {
     const navigate = useNavigate();
@@ -21,6 +23,9 @@ const HomeComponent = () => {
     const [limit, setLimit] = useState(10);
     const [total, setTotal] = useState();
     const getUsers = useSelector((state) => state.homeReducer.userManagementData.getUsersList?.data);
+    const deleteUserData = useSelector((state) => state.homeReducer.userManagementData.deleteUser);
+    const [text, setText] = useState("");
+    const [AlertDialogOpen, setAlertDialogOpen] = useState(false);
 
     useEffect(() => {
         const data = {
@@ -43,14 +48,59 @@ const HomeComponent = () => {
         dispatch(getUsersData({ page: newPage, limit: limit }));
     };
 
+    const handleAddEditUser = (value) => {
+        if (value?.title == "Add User") {
+            dispatch(getUserAddEditData({
+                title: value?.title,
+                id: null,
+                buttonName: "Submit",
+                data: value?.data
+            }));
+            navigate(`/user/addUser`);
+        }
+        else {
+            dispatch(getUserAddEditData({
+                title: value?.title,
+                id: value?.id,
+                buttonName: "Update",
+                data: value?.data
+            }));
+            navigate(`/user/${value?.id}`);
+        }
+    }
+
+    const handleDeleteUser = (value) => {
+        dispatch(deleteUsersData(value)).then((data) => {
+            if (data?.payload?.message) {
+                setText(data?.payload?.message);
+                setAlertDialogOpen(true);
+            }
+        });
+    }
+
+    const handleAlertFeedClose = React.useCallback((value) => {
+        setAlertDialogOpen(false);
+        dispatch(getUsersData({ page: page, limit: limit }));
+    }, [dispatch]);
+
     return (
         <>
+            {
+                getUsers?.isloading == true ||
+                    deleteUserData?.isloading == true
+                    ?
+                    (<CircularProgress className="centered" />) : null
+            }
             <Grid container xs={12} sm={12} md={12} xl={12} lg={12} xxl={12}>
                 <Paper sx={{ width: '100%', overflow: 'hidden', margin: "25px" }}>
                     <Button variant="contained" sx={{
                         float: 'right',
                         margin: '10px'
-                    }} onClick={() => navigate(`/user/addUser`)}>Add User</Button>
+                    }} onClick={() => handleAddEditUser({
+                        title: "Add User",
+                        id: null,
+                        data: null
+                    })}>{AddUser}</Button>
                     <TableContainer sx={{ height: 'calc(100vh - 370px)' }}>
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>
@@ -64,6 +114,9 @@ const HomeComponent = () => {
                                             {column.label}
                                         </TableCell>
                                     ))}
+                                    <TableCell>
+                                        {Actions}
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -74,13 +127,28 @@ const HomeComponent = () => {
                                                 {columns.map((column) => {
                                                     const value = row[column.id];
                                                     return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            {typeof (value) == "string" && moment(value).format("DD/MM/YYYY hh:mm A") !== 'Invalid date'
-                                                                ? moment(value).format("DD/MM/YYYY hh:mm A")
-                                                                : value}
-                                                        </TableCell>
+                                                        <>
+                                                            <TableCell key={column.id} align={column.align}>
+                                                                {typeof (value) == "string" && moment(value).format("DD/MM/YYYY hh:mm A") !== 'Invalid date'
+                                                                    ? moment(value).format("DD/MM/YYYY hh:mm A")
+                                                                    : value}
+                                                            </TableCell>
+                                                        </>
                                                     );
                                                 })}
+                                                <TableCell>
+                                                    <EditIcon sx={{
+                                                        margin: '0px 25px 0px 0px',
+                                                        cursor: 'pointer'
+                                                    }} onClick={() => handleAddEditUser({
+                                                        title: "Edit User",
+                                                        id: row._id,
+                                                        data: row
+                                                    })} />
+                                                    <DeleteIcon sx={{
+                                                        cursor: 'pointer'
+                                                    }} onClick={() => handleDeleteUser(row._id)} />
+                                                </TableCell>
                                             </TableRow>
                                         );
                                     })}
@@ -101,6 +169,11 @@ const HomeComponent = () => {
                     </Grid>
                 </Paper>
             </Grid>
+            <AlertDialogComponent
+                open={AlertDialogOpen}
+                onClose={handleAlertFeedClose}
+                title={"User Management"}
+                text={text} />
         </>
     )
 }

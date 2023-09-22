@@ -7,7 +7,7 @@ import PhoneInputComponent from "../shared/components/phoneInput";
 import Card from '@mui/material/Card';
 import { roleList } from "../shared/constants/constants";
 import DropdownListComponent from "../shared/components/dropdownList";
-import { addUsersData } from "../slices/homeSlice";
+import { addUsersData, updateUsersData } from "../slices/homeSlice";
 import AlertDialogComponent from "../shared/components/alertdialog"
 import { useNavigate } from "react-router-dom";
 
@@ -17,6 +17,9 @@ const AddEditUserComponent = () => {
     const [text, setText] = useState("");
     const [AlertDialogOpen, setAlertDialogOpen] = useState(false);
     const addUser = useSelector((state) => state.homeReducer.userManagementData.addUser);
+    const getUserData = useSelector((state) => state.homeReducer.userManagementData.getUserData);
+    const updateUserData = useSelector((state) => state.homeReducer.userManagementData.updateUser);
+    
     const [values, setValues] = useState({
         firstName: '',
         lastName: '',
@@ -31,6 +34,37 @@ const AddEditUserComponent = () => {
         email: '',
         role: '',
     });
+
+    useEffect(() => {
+        if(getUserData?.data !== null) {
+        setValues((values) => ({
+            ...values,
+            firstName: getUserData?.data?.firstName,
+            lastName: getUserData?.data?.lastName,
+            phoneNumber: getUserData?.data?.phoneNumber,
+            email: getUserData?.data?.email,
+            role: getUserData?.data?.role,
+        }))
+        }
+    }, [getUserData]);
+
+    useEffect(() => {
+        if (values.firstName !== '') {
+            validateFirstName(values);
+        }
+        if (values.lastName !== '') {
+            validateLastName(values);
+        }
+        if (values.phoneNumber !== '') {
+            validatePhoneNumber(values);
+        }
+        if (values.email !== '') {
+            validateEmailID(values);
+        }
+        if (values.role !== '') {
+            validateRole(values);
+        }
+    }, [values]);
 
     const handleFirstNameInputChange = (event) => {
         event.persist();
@@ -69,7 +103,7 @@ const AddEditUserComponent = () => {
         if (!values.firstName) {
             errors.firstName = 'First Name is required';
         }
-        if (values.firstName.length < 4) {
+        if (values.firstName?.length < 4) {
             errors.firstName = 'First Name must be 4 or more characters';
         }
         setErrors((values) => ({
@@ -83,7 +117,7 @@ const AddEditUserComponent = () => {
         if (!values.lastName) {
             errors.lastName = 'Email address is required';
         }
-        if (values.lastName.length < 3) {
+        if (values.lastName?.length < 3) {
             errors.lastName = 'Last Name must be 3 or more characters';
         }
         setErrors((values) => ({
@@ -110,7 +144,7 @@ const AddEditUserComponent = () => {
             errors.phoneNumber = 'Phone Number is required';
         }
         if (/^\d+$/.test(values.phoneNumber)) {
-            if (values.phoneNumber.length < 10 || values.phoneNumber.length > 10) {
+            if (values.phoneNumber?.length < 10 || values.phoneNumber?.length > 10) {
                 errors.phoneNumber = 'Phone Number is Invalid';
             }
             else {
@@ -148,8 +182,7 @@ const AddEditUserComponent = () => {
         }));
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const handleSubmit = (value) => {
         validateFirstName(values);
         validateLastName(values);
         validatePhoneNumber(values);
@@ -159,32 +192,27 @@ const AddEditUserComponent = () => {
             errors.firstName === undefined &&
             errors.lastName === undefined &&
             errors.role === undefined) {
-            dispatch(addUsersData(values)).then((data) => {
-                if (data?.payload?.message) {
-                    setText(data?.payload?.message);
-                    setAlertDialogOpen(true);
-                }
-            });
+            if (value == "Submit") {
+                dispatch(addUsersData(values)).then((data) => {
+                    if (data?.payload?.message) {
+                        setText(data?.payload?.message);
+                        setAlertDialogOpen(true);
+                    }
+                });
+            }
+            else {
+                dispatch(updateUsersData({
+                    id: getUserData?.id,
+                    value: values
+                })).then((data) => {
+                    if (data?.payload?.message) {
+                        setText(data?.payload?.message);
+                        setAlertDialogOpen(true);
+                    }
+                });
+            }
         }
     };
-
-    useEffect(() => {
-        if (values.firstName !== '') {
-            validateFirstName(values);
-        }
-        if (values.lastName !== '') {
-            validateLastName(values);
-        }
-        if (values.phoneNumber !== '') {
-            validatePhoneNumber(values);
-        }
-        if (values.email !== '') {
-            validateEmailID(values);
-        }
-        if (values.role !== '') {
-            validateRole(values);
-        }
-    }, [values]);
 
     const handleAlertFeedClose = React.useCallback((value) => {
         setAlertDialogOpen(false);
@@ -194,7 +222,8 @@ const AddEditUserComponent = () => {
     return (
         <>
             {
-                addUser?.isloading == true ?
+                addUser?.isloading == true ||
+                updateUserData?.isloading == true ?
                     (<CircularProgress className="centered" />) : null
             }
             <Grid container sx={{
@@ -210,7 +239,7 @@ const AddEditUserComponent = () => {
                         justifyContent: 'flex-start',
                         alignItems: 'center'
                     }}>
-                        Add User
+                        {getUserData?.title}
                     </Typography>
                     <Grid lg={12} sx={{
                         display: 'flex',
@@ -257,7 +286,7 @@ const AddEditUserComponent = () => {
                         <Grid lg={5} sx={{
                             margin: '10px 0'
                         }}>
-                            <DropdownListComponent options={roleList} label={"Select Role"} handleChange={handleChange} />
+                            <DropdownListComponent options={roleList} label={"Select Role"} handleChange={handleChange} value={values?.role} />
                             {errors.role && <span className='login-error'>{errors.role}</span>}
                         </Grid>
                     </Grid>
@@ -267,13 +296,13 @@ const AddEditUserComponent = () => {
                         <Grid lg={12} sx={{
                             margin: '10px 0'
                         }}>
-                            <Button variant="contained" onClick={handleSubmit}
+                            <Button variant="contained" onClick={() => handleSubmit(getUserData?.buttonName)}
                                 disabled={
                                     errors.email ||
                                     errors.firstName ||
                                     errors.lastName ||
                                     errors.role
-                                }>Submit</Button>
+                                }>{getUserData?.buttonName}</Button>
                         </Grid>
                     </Grid>
                 </Card>
