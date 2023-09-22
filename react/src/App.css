@@ -60,3 +60,9 @@ th.MuiTableCell-root {
   color: #1976d2 !important;
   animation: animation-61bdi0 1.4s linear infinite !important;
 }
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 15px;
+}

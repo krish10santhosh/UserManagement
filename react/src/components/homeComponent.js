@@ -6,8 +6,8 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Actions, AddUser, columns } from "../shared/constants/constants";
-import { Button, CircularProgress, Grid, Pagination } from "@mui/material";
+import { Actions, AddUser, columns, userManagement } from "../shared/constants/constants";
+import { Button, CircularProgress, Grid, Pagination, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsersData, getUserAddEditData, deleteUsersData } from "../slices/homeSlice";
@@ -84,14 +84,20 @@ const HomeComponent = () => {
             }
             <Grid container xs={12} sm={12} md={12} xl={12} lg={12} xxl={12}>
                 <Paper sx={{ width: '100%', overflow: 'hidden', margin: "25px" }}>
-                    <Button variant="contained" sx={{
-                        float: 'right',
-                        margin: '10px'
-                    }} onClick={() => handleAddEditUser({
+                <Grid item xs={12} sm={12} md={12} xl={12} lg={12} xxl={12}>
+                <Typography variant="h6" component="div" sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center'
+                    }}>
+                        {userManagement}
+                    </Typography>
+                    <Button variant="contained" className="heading" onClick={() => handleAddEditUser({
                         title: "Add User",
                         id: null,
                         data: null
                     })}>{AddUser}</Button>
+                    </Grid>
                     <TableContainer sx={{ height: 'calc(100vh - 370px)' }}>
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>

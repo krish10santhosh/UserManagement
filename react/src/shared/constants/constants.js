@@ -1,15 +1,15 @@
 export const columns = [
-    { id: 'firstName', label: 'First Name', minWidth: 150 },
-    { id: 'lastName', label: 'Last Name', minWidth: 150 },
+    { id: 'firstName', label: 'First Name', minWidth: 140 },
+    { id: 'lastName', label: 'Last Name', minWidth: 140 },
     {
         id: 'phoneNumber',
         label: 'Phone Number',
-        minWidth: 100,
+        minWidth: 80,
     },
     {
         id: 'email',
         label: 'Email ID',
-        minWidth: 170,
+        minWidth: 150,
     },
     {
         id: 'role',
@@ -19,7 +19,7 @@ export const columns = [
     {
         id: 'createdDate',
         label: 'Created At',
-        minWidth: 170,
+        minWidth: 150,
     },
 ];
 
@@ -30,5 +30,6 @@ export const roleList = [
 ]
 
 
+export const userManagement = "User Management";
 export const AddUser = "Add User";
 export const Actions = "Actions";
