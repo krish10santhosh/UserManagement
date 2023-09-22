@@ -14,7 +14,6 @@ import { getUsersData, getUserAddEditData, deleteUsersData } from "../slices/hom
 import moment from 'moment';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AlertDialogComponent from '../shared/components/alertdialog';
 
 const HomeComponent = () => {
     const navigate = useNavigate();
@@ -24,8 +23,6 @@ const HomeComponent = () => {
     const [total, setTotal] = useState();
     const getUsers = useSelector((state) => state.homeReducer.userManagementData.getUsersList?.data);
     const deleteUserData = useSelector((state) => state.homeReducer.userManagementData.deleteUser);
-    const [text, setText] = useState("");
-    const [AlertDialogOpen, setAlertDialogOpen] = useState(false);
 
     useEffect(() => {
         const data = {
@@ -72,16 +69,10 @@ const HomeComponent = () => {
     const handleDeleteUser = (value) => {
         dispatch(deleteUsersData(value)).then((data) => {
             if (data?.payload?.message) {
-                setText(data?.payload?.message);
-                setAlertDialogOpen(true);
+                dispatch(getUsersData({ page: page, limit: limit }));
             }
         });
     }
-
-    const handleAlertFeedClose = React.useCallback((value) => {
-        setAlertDialogOpen(false);
-        dispatch(getUsersData({ page: page, limit: limit }));
-    }, [dispatch]);
 
     return (
         <>
@@ -169,11 +160,6 @@ const HomeComponent = () => {
                     </Grid>
                 </Paper>
             </Grid>
-            <AlertDialogComponent
-                open={AlertDialogOpen}
-                onClose={handleAlertFeedClose}
-                title={"User Management"}
-                text={text} />
         </>
     )
 }

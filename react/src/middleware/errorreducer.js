@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 export const ErrorLogger = (api) => (next) => (action) => {
-    if (action.payload?.message) {
+    if (action.payload?.toastMessage) {
         toast.success(action.payload?.message, {
             toastId: 'Success',
         })

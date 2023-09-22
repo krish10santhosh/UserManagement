@@ -206,8 +206,7 @@ const AddEditUserComponent = () => {
                     value: values
                 })).then((data) => {
                     if (data?.payload?.message) {
-                        setText(data?.payload?.message);
-                        setAlertDialogOpen(true);
+                        navigate("/home");
                     }
                 });
             }
