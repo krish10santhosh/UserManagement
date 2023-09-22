@@ -84,7 +84,7 @@ const HomeComponent = () => {
             }
             <Grid container xs={12} sm={12} md={12} xl={12} lg={12} xxl={12}>
                 <Paper sx={{ width: '100%', overflow: 'hidden', margin: "25px" }}>
-                <Grid item xs={12} sm={12} md={12} xl={12} lg={12} xxl={12}>
+                <Grid item xs={12} sm={12} md={12} xl={12} lg={12} xxl={12} className="heading">
                 <Typography variant="h6" component="div" sx={{
                         display: 'flex',
                         justifyContent: 'flex-start',
@@ -92,7 +92,7 @@ const HomeComponent = () => {
                     }}>
                         {userManagement}
                     </Typography>
-                    <Button variant="contained" className="heading" onClick={() => handleAddEditUser({
+                    <Button variant="contained" onClick={() => handleAddEditUser({
                         title: "Add User",
                         id: null,
                         data: null
