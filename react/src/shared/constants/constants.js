@@ -1,6 +1,6 @@
 export const columns = [
-    { id: 'firstName', label: 'First Name', minWidth: 140 },
-    { id: 'lastName', label: 'Last Name', minWidth: 140 },
+    { id: 'firstName', label: 'First Name', minWidth: 130 },
+    { id: 'lastName', label: 'Last Name', minWidth: 130 },
     {
         id: 'phoneNumber',
         label: 'Phone Number',
@@ -9,7 +9,7 @@ export const columns = [
     {
         id: 'email',
         label: 'Email ID',
-        minWidth: 150,
+        minWidth: 100,
     },
     {
         id: 'role',
